@@ -1,0 +1,13 @@
+{
+    "client": {
+        "token": "MTExNjI2NzkwNzY2ODc3MDgxNg.Gy67nl.fTCGiLv7WyoAz3VtbAJ_kZFTmi5_EC4gPTmFuk",
+        "clientId": "1116267907668770816",
+        "guildId": "1046435874369458217"
+    },
+    "mysql": {
+        "host": "localhost",
+        "database": "discord_bot",
+        "user": "root",
+        "password": ""
+    }
+}
