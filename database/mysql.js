@@ -10,12 +10,12 @@
 const config = require('../config.json');
 const chalk = require('chalk')
 const { createConnection } = require('mysql');
+const { Events } = require('discord.js');
 
+let con = createConnection(config.mysql);
 
-const { id, displayName } = require('../events/ready.js')
 
 function mysqlConnect() {
-    let con = createConnection(config.mysql);
 
     con.connect(err => {
         // Console log if there is an error
@@ -24,51 +24,37 @@ function mysqlConnect() {
         // No error found?
         console.log(chalk.bold(chalk.green(`MySQL has been connected!`)));
     });
+}
 
-    const query = `SHOW TABLES LIKE '${global.tableToCheck}'`;
+// Создаём таблицу в базе данных с названием сервера
+function createTable(guild_id) {
+    console.log(guild_id)
+    const createServerTable = `CREATE TABLE IF NOT EXISTS \`${guild_id}\`(
+                \`id\` INT AUTO_INCREMENT PRIMARY KEY,
+                \`user\` VARCHAR(255) NOT NULL,
+                \`warns\` JSON DEFAULT NULL,
+                \`lvl\` INT DEFAULT 0
+            );`
 
-    con.query(query, (error, results, fields) => {
-        // Если возникает ошибка, выводим ее
+    con.query(createServerTable, (error, results, fields) => {
         if (error) {
             console.log(error.message);
             return;
         }
-
-        // Если результаты пустые, создаем таблицу
-        if (results.length === 0) {
-            const createTableQuery = `CREATE TABLE ${global.tableToCheck} (
-                name VARCHAR(255),
-                lvl INT DEFAULT 0,
-                warns INT DEFAULT 0
-              )`;
-
-            const insertQuery = `INSERT INTO ${global.tableToCheck} (id, name) VALUES (${id}, '${displayName}')`; // Создаем SQL-запрос для вставки данных пользователя
-            con.query(insertQuery, (error, results, fields) => {
-                if (error) {
-                    console.error(error);
-                    return;
-                }
-                console.log(`User ${displayName} with ID ${id} added to the database!`);
-            });
-
-            con.query(createTableQuery, insertQuery, (error, results, fields) => {
-                if (error) {
-                    console.log(error.message);
-                    return;
-                }
-                console.log(chalk.green(`Table ${global.tableToCheck} was successfully created!`));
-            });
-        } else {
-            console.log(chalk.blue(`Table ${global.tableToCheck} already exists.`));
-        }
     });
+};
+
+async function completeTable(user) {
+    const completeServerTable = `SELECT * FROM \`${user.guild.id}\` WHERE \`user\`  = '${user.id}'`;
+
+    try {
+        const results = await con.query(completeServerTable);
+        if (results.length == 0) {
+            await con.query(`INSERT INTO \`${user.guild.id}\` (\`id\`, \`user\`, \`warns\`, \`lvl\` ) VALUES (NULL, '${user.id}', NULL, '0')`);
+        }
+    } catch (error) {
+        console.log(error.message);
+    }
 }
 
-
-
-
-function test() {
-    console.log(global.tableToCheck)
-}
-
-module.exports = { mysqlConnect };
+module.exports = { mysqlConnect, createTable, completeTable };

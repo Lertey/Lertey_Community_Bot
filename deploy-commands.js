@@ -40,17 +40,17 @@ rest.put(Routes.applicationCommands(config.client.clientId), { body: [] })
     try {
         console.log(chalk.yellow(`Started refreshing ${commands.length} application (/) commands.`))
 
-        // PUBLIC TEST SERVERS
-        const data = await rest.put(
-            Routes.applicationGuildCommands(config.client.clientId, config.client.guildId),
-            { body: commands },
-        );
-
-        // PUBLIC ALL SERVERS
+        // // PUBLIC TEST SERVERS
         // const data = await rest.put(
-        //     Routes.applicationCommands(config.client.clientId),
+        //     Routes.applicationGuildCommands(config.client.clientId, config.client.guildId),
         //     { body: commands },
         // );
+
+        // PUBLIC ALL SERVERS
+        const data = await rest.put(
+            Routes.applicationCommands(config.client.clientId),
+            { body: commands },
+        );
 
         console.log(chalk.green(`Successfully reloaded ${data.length} application (/) commands.`))
     } catch (error) {

@@ -4,7 +4,7 @@ const { SlashCommandBuilder, CommandInteraction, PermissionFlagsBits, EmbedBuild
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('clear')
-        .setDescription('clear')
+        .setDescription('Clear chat command')
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
         .addIntegerOption(option => option.setName('amount')
             .setDescription('Amout of msg to clear')

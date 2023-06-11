@@ -2,10 +2,19 @@ const path = require('node:path')
 const fs = require('node:fs')
 const { REST, Routes, Guild } = require('discord.js');
 const config = require('./config.json');
-const { Client, Collection, Events, GatewayIntentBits } = require('discord.js')
+const { Client, Collection, Events, IntentsBitField } = require('discord.js')
 const chalk = require('chalk')
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const myIntents = new IntentsBitField()
+	.add(
+		IntentsBitField.Flags.GuildPresences,
+		IntentsBitField.Flags.GuildMembers,
+		IntentsBitField.Flags.Guilds,
+		IntentsBitField.Flags.GuildMessages);
+
+const client = new Client({
+	intents: myIntents
+});
 
 // COMMANDS
 client.commands = new Collection();
@@ -40,3 +49,6 @@ for (const file of eventFiles) {
 }
 
 client.login(config.client.token)
+
+
+module.exports = { client };
