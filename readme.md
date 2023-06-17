@@ -1,6 +1,10 @@
 # Lertey_Community_Bot 
 
 ## Project info 📃
+
+# The repository is out of date!!!
+
+
 The project was created to explore and practice node.js, discord.js and other libraries. It will be actively maintained and updated for the discord server - Lertey Community. 
 
 
